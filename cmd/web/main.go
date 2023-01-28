@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"flag"
+	"github.com/Mike-95/blog_web/pkg/models/mysql"
 	"log"
 	"net/http"
 	"os"
@@ -13,6 +14,7 @@ import (
 type application struct {
 	errorLog *log.Logger
 	infoLog  *log.Logger
+	posts    *mysql.PostModel
 }
 
 func main() {
@@ -34,6 +36,7 @@ func main() {
 	app := &application{
 		errorLog: errorLog,
 		infoLog:  infoLog,
+		posts:    &mysql.PostModel{DB: db},
 	}
 
 	srv := &http.Server{
