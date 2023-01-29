@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Mike-95/blog_web/pkg/models"
-	"html/template"
 	"net/http"
 	"strconv"
 )
@@ -20,22 +19,9 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := &templateData{Posts: s}
-
-	files := []string{
-		"./ui/html/home.page.html",
-		"./ui/html/base.layout.html",
-		"./ui/html/footer.partial.html",
-	}
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-	err = ts.Execute(w, data)
-	if err != nil {
-		app.serverError(w, err)
-	}
+	app.render(w, r, "home.page.html", &templateData{
+		Posts: s,
+	})
 }
 
 func (app *application) createPost(writer http.ResponseWriter, request *http.Request) {
@@ -76,22 +62,7 @@ func (app *application) showPost(writer http.ResponseWriter, request *http.Reque
 		return
 	}
 
-	data := &templateData{Post: s}
-
-	files := []string{
-		"./ui/html/show.page.html",
-		"./ui/html/base.layout.html",
-		"./ui/html/footer.partial.html",
-	}
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(writer, err)
-		return
-	}
-	err = ts.Execute(writer, data)
-	if err != nil {
-		app.serverError(writer, err)
-
-	}
-
+	app.render(writer, request, "show.page.html", &templateData{
+		Post: s,
+	})
 }
