@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Mike-95/blog_web/pkg/models"
+	"html/template"
 	"net/http"
 	"strconv"
 )
@@ -19,26 +20,22 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for _, post := range s {
-		fmt.Fprintf(w, "%v\n", post)
-	}
+	data := &templateData{Posts: s}
 
-	//files := []string{
-	//	"./ui/html/home.page.html",
-	//	"./ui/html/base.layout.html",
-	//	"./ui/html/footer.partial.html",
-	//}
-	//ts, err := template.ParseFiles(files...)
-	//if err != nil {
-	//	app.serverError(w, err)
-	//	http.Error(w, "Internal Server Error", 500)
-	//	return
-	//}
-	//err = ts.Execute(w, nil)
-	//if err != nil {
-	//	app.serverError(w, err)
-	//	http.Error(w, "Internal Server Error", 500)
-	//}
+	files := []string{
+		"./ui/html/home.page.html",
+		"./ui/html/base.layout.html",
+		"./ui/html/footer.partial.html",
+	}
+	ts, err := template.ParseFiles(files...)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	err = ts.Execute(w, data)
+	if err != nil {
+		app.serverError(w, err)
+	}
 }
 
 func (app *application) createPost(writer http.ResponseWriter, request *http.Request) {
@@ -78,5 +75,23 @@ func (app *application) showPost(writer http.ResponseWriter, request *http.Reque
 		}
 		return
 	}
-	fmt.Fprintf(writer, "%v", s)
+
+	data := &templateData{Post: s}
+
+	files := []string{
+		"./ui/html/show.page.html",
+		"./ui/html/base.layout.html",
+		"./ui/html/footer.partial.html",
+	}
+	ts, err := template.ParseFiles(files...)
+	if err != nil {
+		app.serverError(writer, err)
+		return
+	}
+	err = ts.Execute(writer, data)
+	if err != nil {
+		app.serverError(writer, err)
+
+	}
+
 }
