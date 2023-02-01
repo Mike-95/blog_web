@@ -13,6 +13,7 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		app.notFound(w)
 		return
 	}
+
 	s, err := app.posts.Latest()
 	if err != nil {
 		app.serverError(w, err)
