@@ -9,10 +9,6 @@ import (
 )
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/" {
-		app.notFound(w)
-		return
-	}
 
 	s, err := app.posts.Latest()
 	if err != nil {
@@ -26,11 +22,6 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) createPost(writer http.ResponseWriter, request *http.Request) {
-	if request.Method != http.MethodPost {
-		writer.Header().Set("Allow", http.MethodPost)
-		app.clientError(writer, http.StatusMethodNotAllowed)
-		return
-	}
 
 	title := "title test"
 	content := "content test"
@@ -42,12 +33,12 @@ func (app *application) createPost(writer http.ResponseWriter, request *http.Req
 		return
 	}
 
-	http.Redirect(writer, request, fmt.Sprintf("/post?id=%d", id), http.StatusSeeOther)
+	http.Redirect(writer, request, fmt.Sprintf("/post/%d", id), http.StatusSeeOther)
 
 }
 
 func (app *application) showPost(writer http.ResponseWriter, request *http.Request) {
-	id, err := strconv.Atoi(request.URL.Query().Get("id"))
+	id, err := strconv.Atoi(request.URL.Query().Get(":id"))
 	if err != nil || id < 1 {
 		http.NotFound(writer, request)
 		return
@@ -66,4 +57,8 @@ func (app *application) showPost(writer http.ResponseWriter, request *http.Reque
 	app.render(writer, request, "show.page.html", &templateData{
 		Post: s,
 	})
+}
+
+func (app *application) createPostForm(w http.ResponseWriter, r *http.Request) {
+
 }
