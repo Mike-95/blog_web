@@ -1,0 +1,25 @@
+{{template "base" .}}
+{{define "title"}} Create a new Post {{end}}
+
+{{define "main"}}
+<form action="/post/create" method="POST">
+    <div>
+        <label>Title:</label>
+        <input type="text" name="title">
+    </div>
+    <div>
+        <label>Content:</label>
+        <input type="text" name="content">
+    </div>
+    <div>
+        <label>Choose Category:</label>
+        <input type="radio" name="category" value="Web Development" checked> Web Development
+        <input type="radio" name="category" value="Mobile App"> Mobile App
+        <input type="radio" name="category" value="ML"> Machine Learning
+        <input type="radio" name="category" value="Data Science"> Data Science
+    </div>
+    <div>
+        <input type="submit" value="Publish Post">
+    </div>
+</form>
+{{end}}

@@ -23,9 +23,15 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) createPost(writer http.ResponseWriter, request *http.Request) {
 
-	title := "title test"
-	content := "content test"
-	category := "category test"
+	err := request.ParseForm()
+	if err != nil {
+		app.clientError(writer, http.StatusBadRequest)
+		return
+	}
+
+	title := request.PostForm.Get("title")
+	content := request.PostForm.Get("content")
+	category := request.PostForm.Get("category")
 
 	id, err := app.posts.Insert(title, content, category)
 	if err != nil {
@@ -60,5 +66,5 @@ func (app *application) showPost(writer http.ResponseWriter, request *http.Reque
 }
 
 func (app *application) createPostForm(w http.ResponseWriter, r *http.Request) {
-
+	app.render(w, r, "create.page.html", nil)
 }
