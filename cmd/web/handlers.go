@@ -48,6 +48,8 @@ func (app *application) createPost(writer http.ResponseWriter, request *http.Req
 		return
 	}
 
+	app.session.Put(request, "flash", "Post successfully created!")
+
 	http.Redirect(writer, request, fmt.Sprintf("/post/%d", id), http.StatusSeeOther)
 
 }
