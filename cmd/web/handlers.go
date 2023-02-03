@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"github.com/Mike-95/blog_web/pkg/forms"
 	"github.com/Mike-95/blog_web/pkg/models"
 	"net/http"
 	"strconv"
@@ -29,11 +30,19 @@ func (app *application) createPost(writer http.ResponseWriter, request *http.Req
 		return
 	}
 
-	title := request.PostForm.Get("title")
-	content := request.PostForm.Get("content")
-	category := request.PostForm.Get("category")
+	form := forms.New(request.PostForm)
+	form.Required("title", "content", "category")
+	form.MaxLength("title", 100)
+	form.PermittedValues("category", "Web Development", "Mobile App", "ML", "Data Science")
 
-	id, err := app.posts.Insert(title, content, category)
+	if !form.Valid() {
+		app.render(writer, request, "create.page.html", &templateData{
+			Form: form,
+		})
+		return
+	}
+
+	id, err := app.posts.Insert(form.Get("title"), form.Get("content"), form.Get("category"))
 	if err != nil {
 		app.serverError(writer, err)
 		return
@@ -66,5 +75,8 @@ func (app *application) showPost(writer http.ResponseWriter, request *http.Reque
 }
 
 func (app *application) createPostForm(w http.ResponseWriter, r *http.Request) {
-	app.render(w, r, "create.page.html", nil)
+	app.render(w, r, "create.page.html", &templateData{
+		Form: forms.New(nil),
+	})
+
 }

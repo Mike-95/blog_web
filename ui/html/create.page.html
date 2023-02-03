@@ -3,16 +3,25 @@
 
 {{define "main"}}
 <form action="/post/create" method="POST">
+    {{with .Form}}
     <div>
         <label>Title:</label>
-        <input type="text" name="title">
+        {{with .Errors.Get "title"}}
+        <label class="error">{{.}}</label>
+        {{end}}
+        <input type="text" name="title" value='{{.Get "title"}}'>
     </div>
     <div>
         <label>Content:</label>
-        <input type="text" name="content">
+        {{with .Errors.Get "content"}}
+        <label class="error">{{.}}</label>
+        {{end}}
+        <textarea name="content">{{.Get "content"}}</textarea>
     </div>
     <div>
         <label>Choose Category:</label>
+        {{with .Errors.Get "category"}}
+        {{end}}
         <input type="radio" name="category" value="Web Development" checked> Web Development
         <input type="radio" name="category" value="Mobile App"> Mobile App
         <input type="radio" name="category" value="ML"> Machine Learning
@@ -21,5 +30,6 @@
     <div>
         <input type="submit" value="Publish Post">
     </div>
+    {{end}}
 </form>
 {{end}}

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/Mike-95/blog_web/pkg/forms"
 	"github.com/Mike-95/blog_web/pkg/models"
 	"path/filepath"
 	"text/template"
@@ -47,6 +48,7 @@ func newTemplateCache(dir string) (map[string]*template.Template, error) {
 
 type templateData struct {
 	CurrentYear int
+	Form        *forms.Form
 	Post        *models.Post
 	Posts       []*models.Post
 }
